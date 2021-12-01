@@ -1,5 +1,8 @@
 # Taxi_demand_prediction_NYC_project
 
+I have done this Project in Kaggle, please refer below link -
+
+
 ### Context
 The yellow taxi trip records include fields capturing pick-up and drop-off dates/times, pick-up and drop-off locations, trip distances, itemized fares, rate types, payment types, and driver-reported passenger counts. The data used in the attached datasets were collected and provided to the NYC Taxi and Limousine Commission (TLC) by technology providers authorized under the Taxicab & Livery Passenger Enhancement Programs (TPEP/LPEP).                                                                           
 
@@ -9,7 +12,8 @@ Ge the data from : http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml
 The data used in the attached datasets were collected and provided to the NYC Taxi and Limousine Commission (TLC) 
 
 The data is also provided in Kaggle
-Kaggle Link : https://www.kaggle.com/vishnurapps/newyork-taxi-demand
+
+  Kaggle Link : https://www.kaggle.com/vishnurapps/newyork-taxi-demand
 </p>
 
 ## Information on taxis:
@@ -28,7 +32,8 @@ Kaggle Link : https://www.kaggle.com/vishnurapps/newyork-taxi-demand
 In the given notebook we are considering only the yellow taxis for the time period between Jan - Mar 2015 & Jan - Mar 2016
 
 # Data Collection:
-I have collected all yellow taxi trips data from jan-2015 to dec-2016(Will be using only 2015 data)
+- I have collected all yellow taxi trips data from jan-2015 to dec-2016(Will be using only 2015 data) 
+- I have used dask library to read the data due to its large size
 <table>
 <tr>
 <th> file name </th>
@@ -197,13 +202,67 @@ I have collected all yellow taxi trips data from jan-2015 to dec-2016(Will be us
 
 ## Data-Preperation:
 
-1. Clustering/Segmentation
-As a part of our solution is to predict the pickups in a region within some time interval, we need to derive regions and time intervals from data.Lets begin with dividing NYC into K clusters using the latitude and longitude of pickups. Using K-Means clustering, we cluster the pick-up points into different regions.
+#### 1. Clustering/Segmentation
 
-From the data, we observe that a taxi can cover up to 2 miles in 10 minutes. Therefore, we want the inner cluster distance to be greater than 2 miles but not lesser than 0.5 miles. The optimal K value must meet this constraint. We tried a range of different cluster values from 30 to 70 clusters. After trying a different range of clusters, we observed that when the number of clusters is 40.
+As a part of our solution is to predict the pickups in a region within some time interval, we need to derive regions and time intervals from data.Lets begin with dividing NYC into K clusters using the latitude and longitude of pickups. Using K-Means clustering, we cluster the pick-up points into different regions. From the data, we observe that a taxi can cover up to 2 miles in 10 minutes. Therefore, we want the inner cluster distance to be greater than 2 miles but not lesser than 0.5   miles. The optimal K value must meet this constraint. We tried a range of different cluster values from 30 to 70 clusters. After trying a different range of clusters, we observed that when the number of clusters is 40.
 
-2. Time Binning
+#### 2. Time Binning:
+
 Every region is split into 10-minute interval, which corresponds to one time bin, i.e. each time bin has 10 minute. However, in the data we have time in the format “YYYY-MM-DD HH:MM:SS which are converted to Unix time format so as to retrieve time in minute/hour format. Number of possible 10 min interval bins : 4464 bins
 
-3. Smoothing
-Now that the data is divided into 10-minute interval bins, each bin should contain at least one pickup. There are chances that a time bin may contain zero pick-ups leading to ratio feature error.
+#### 3. Smoothing:
+
+Now that the data is divided into 10-minute interval bins, each bin should contain at least one pickup. There are chances that a time bin may contain zero pick-ups leading to ratio feature error and division by zero therefore we need to smoothed these values
+
+#### 4. Time series and Fourier Transforms:
+
+In theory, any waveform can be represented as the sum of infinite sine waves. Each sine wave has some amplitude and frequency. We can see that the number of pickups in a month in every cluster form a repeating pattern. We do not know the frequency of the repeating pattern. Our pattern cannot be represented by a single frequency as it’s aperiodic. Instead, it is composed of infinite sine wave with each sine wave having a frequency. Fourier transform lets us represent our pattern from time domain (number of pickups per time) to frequency domain(can be viewed as number pickup bins with highest number of pickups).
+
+## MODELING
+### Baseline models:
+
+The first step to solving our business problem begins with baseline model. We will walk you through the process of discovering the right baseline model which gave us the best result.
+
+1. Moving Averages
+
+2. Weighted Moving Averages
+
+3. Exponential Moving Averages
+
+### Feature Engineering:
+
+After doing all the data cleaning and preparation and baseline modelling, we now have an arsenal of features which would help build a good predication model. We see that, from baseline modeling, how Exponential weighted moving averages gives the best forecasting among the rest. We will use this as a feature while building the regression model along with others we got from data preparation stage.
+
+## REGRESSION MODELS
+#### Test and train split:
+
+For test and train split by time, we take 3 months of 2016 pickup data and split it such that for every region we have 70% data in train and 30% in the test. As this is a time-series problem, we have to split our train and test data on the basis of time.
+
+1. LINEAR REGRESSION
+
+2. RANDOM FOREST REGRESSION
+
+3. XGBOOST REGRESSOR
+
+## MODEL EVALUATION
+
+    Error Metric Matrix (Tree Based Regression Methods) -  MAPE
+    --------------------------------------------------------------------------------------------------------
+    Baseline Model -                             Train:  0.1487    |  Test:  0.1422
+    Exponential Averages Forecasting -           Train:  0.1412    |  Test:  0.1349
+    Linear Regression -                          Train:  0.1421    |  Test:  0.1348
+    Random Forest Regression -                   Train:  0.0987    |  Test:  0.1333
+    XgBoost Regression -                         Train:  0.1385    |  Test:  0.1328
+    --------------------------------------------------------------------------------------------------------
+
+# Conclusion:
+
+- I have built a total of 5 regression models using the pickup_densities. Some models used the time series property while the other models ignored it and was treated as a proper regression problem.
+
+- We can see that XGBoost performed based on TEST_MAPE was better than other models. Linear Regression was able to achieve similar values as XGBoost. 
+
+- Here Random Forest Regression performs well on Train data and not good on test data which makes it overfit.Therefore, I choose XGBoost to avoid overfitting.
+
+- Some of the more important features used by these models are pickupdensity(P(t-1),P(t-2)...) followed by Exponential Moving Averages using the previous pickup densities(predicted).
+
+- Using these predictions, the Yellow taxi owners can decide where to station themselves during their hours of least pickup.
