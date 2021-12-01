@@ -1,7 +1,8 @@
 # Taxi_demand_prediction_NYC_project
 
-I have done this Project in Kaggle, please refer below link -
+Since the project data is very high, I have done this Project in Kaggle, please find it in the below link -
 
+### https://www.kaggle.com/dasarimohana/nyc-taxi-demand-by-dasari-mohana
 
 ### Context
 The yellow taxi trip records include fields capturing pick-up and drop-off dates/times, pick-up and drop-off locations, trip distances, itemized fares, rate types, payment types, and driver-reported passenger counts. The data used in the attached datasets were collected and provided to the NYC Taxi and Limousine Commission (TLC) by technology providers authorized under the Taxicab & Livery Passenger Enhancement Programs (TPEP/LPEP).                                                                           
@@ -13,7 +14,7 @@ The data used in the attached datasets were collected and provided to the NYC Ta
 
 The data is also provided in Kaggle
 
-  Kaggle Link : https://www.kaggle.com/vishnurapps/newyork-taxi-demand
+   Kaggle Data Link : https://www.kaggle.com/vishnurapps/newyork-taxi-demand
 </p>
 
 ## Information on taxis:
@@ -29,7 +30,7 @@ The data is also provided in Kaggle
 <p> Credits: Quora</p>
 
 <h5>Note:</h5>
-In the given notebook we are considering only the yellow taxis for the time period between Jan - Mar 2015 & Jan - Mar 2016
+In this notebook I am considering only the yellow taxis for the time period between Jan - Mar 2015 & Jan - Mar 2016
 
 # Data Collection:
 - I have collected all yellow taxi trips data from jan-2015 to dec-2016(Will be using only 2015 data) 
