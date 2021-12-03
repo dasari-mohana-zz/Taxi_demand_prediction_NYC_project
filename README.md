@@ -22,14 +22,13 @@ The data is also provided in Kaggle
 <h5> Yellow Taxi: Yellow Medallion Taxicabs</h5>
 <p> These are the famous NYC yellow taxis that provide transportation exclusively through street-hails. The number of taxicabs is limited by a finite number of medallions issued by the TLC. You access this mode of transportation by standing in the street and hailing an available taxi with your hand. The pickups are not pre-arranged.</p>
 
-<h5> For Hire Vehicles (FHVs) </h5>
+<h5> For Hire Vehicles(FHVs): </h5>
 <p> FHV transportation is accessed by a pre-arrangement with a dispatcher or limo company. These FHVs are not permitted to pick up passengers via street hails, as those rides are not considered pre-arranged. </p>
 
 <h5> Green Taxi: Street Hail Livery (SHL) </h5>
 <p>  The SHL program will allow livery vehicle owners to license and outfit their vehicles with green borough taxi branding, meters, credit card machines, and ultimately the right to accept street hails in addition to pre-arranged rides. </p>
-<p> Credits: Quora</p>
 
-<h5>Note:</h5>
+<h4>Note:</h4>
 In this notebook I am considering only the yellow taxis for the time period between Jan - Mar 2015 & Jan - Mar 2016
 
 # Data Collection:
